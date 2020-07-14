@@ -1,0 +1,37 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% block title %}
+Профиль
+{% endblock %}
+{% block content %}
+<p>Профиль пользователя {{user.username}}</p>
+{% if not user.first_name and not user.last_name %}
+<p>Фамилия и Имя не указаны </p>
+{% else %}
+<p>Имя: {{user.first_name}}</p>
+<p>Фамилия: {{user.last_name}}</p>
+{% endif %}
+{% if user.profile.photo %}
+<div>
+    <img src="{{ request.user.profile.photo.url }}" alt="default jpg">
+</div>
+{% else %}
+<div>
+    <img src="{% static 'photos/images/default_profile.jpg' %}" width="150" height="150"
+         alt="default jpg">
+</div>
+{% endif %}
+{% if not user.profile.birth_date %}
+<p>Дата рождения не указана. Формат ввода даты (день.месяц.год)</p>
+{% else %}
+<p>Дата рождения {{user.profile.birth_date}}</p>
+{% endif %}
+{% if not user.profile.about_me %}
+<p>Данные о себе не указаны</p>
+{% else %}
+<p>О себе {{user.profile.about_me}}</p>
+{% endif %}
+<a href="{% url 'accounts:users_quizes' %}">Мои тесты</a>
+<a href="{% url 'accounts:profile_update' request.user.pk %}">Изменить свой профиль</a>
+{% endblock %}

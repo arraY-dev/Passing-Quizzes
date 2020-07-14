@@ -1,0 +1,15 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Создание теста
+{% endblock %}
+{% block content %}
+<p>Создание теста</p>
+<form method="post" enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.as_p }}
+    <button type="submit" class="btn btn-success">Создать</button>
+    <a href="#" onclick="window.history.back(); return false;" title="Cancel"><i>Отмена</i></a>
+</form>
+{% endblock %}

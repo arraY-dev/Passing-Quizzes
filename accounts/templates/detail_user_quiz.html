@@ -1,0 +1,109 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Тест "{{ quiz.title }}"
+{% endblock %}
+{% block content %}
+<p>Тест "{{ quiz.title }}"</p>
+<p>{{ quiz.description }}</p>
+<p>Количество прохождений:
+    {{ quiz.counter_pass }}</p>
+{% if questions|length < 5 %}
+<h4>У вашего теста не хватает вопросов, минимум 5 должно быть. Если менее, вашь тест не смогут пройти другие
+    пользователи.</h4>
+<ul>
+    {% for k,v in answers.items %}
+    <li>{{ forloop.counter }}. {{ k }}
+        <ul>
+            {% for data in v %}
+            <li data-right-answer={{data.0}}>{{ forloop.counter }}. {{ data.1 }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </li>
+</ul>
+{% else %}
+<ul>
+    {% for k,v in answers.items %}
+    <li>{{ forloop.counter }}. {{ k }}
+        <ul>
+            {% for data in v %}
+            <li data-right-answer={{data.0}}>{{ forloop.counter }}. {{ data.1 }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </li>
+</ul>
+<button id="check-answers">Просмотреть Ответы</button>
+{% endif %}
+<p><a href="{% url 'accounts:question_add' quiz.pk %}">Добавить вопрос и ответы</a></p>
+<p><a href="{% url 'accounts:quiz_change' quiz.pk %}">Изменить тест</a></p>
+<p><a href="{% url 'accounts:quiz_delete' quiz_pk=quiz.pk %}">Удалить тест</a></p>
+<p><a href="{% url 'accounts:users_quizes' %}"><i>Назад</i></a></p>
+{% if comments %}
+<br>
+<br>
+<div class="comments__box-comments">
+    <ul class="media-list">
+        {% for comment in comments %}
+        <li class="media comment__item">
+            <div class="comment__item-container bg-secondary">
+                <div class="comment__item-names rounded-circle">
+                    <p class="comment__item-name text-white bg-dark">
+                        {{ comment.author.username }}
+                    </p>
+                    <span class="text-muted pull-right">
+                        <small class=" text-white">{{ comment.created_at }}</small>
+                    </span>
+                </div>
+                <div class="comment__item-content">
+                    <p>
+                        {{ comment.content }}
+                    </p>
+                </div>
+                <div class="comment__item-buttons">
+                    {% if quiz.user.pk == user.pk and comment.author.pk == user.pk %}
+                    <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                        <button class="btn btn-primary"> Исправить
+                        </button>
+                    </a>
+                    <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <button class="btn btn-primary"> Удалить
+                        </button>
+                    </a>
+                    {% elif comment.author.pk == user.pk %}
+                    <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                        <button class="btn btn-primary"> Исправить
+                        </button>
+                    </a>
+                    <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <button class="btn btn-primary"> Удалить
+                        </button>
+                    </a>
+                    {% elif quiz.user.pk == user.pk %}
+                    <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <button class="btn btn-primary"> Удалить
+                        </button>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<div class="comments__box">
+        <p class="comments__box-name">Добавить комментарий:</p>
+        <form method="post" class="comments__box-form">
+            {% csrf_token %}
+            {% bootstrap_form form layout='horizontal' %}
+            {% buttons submit='Добавить' %}{% endbuttons %}
+        </form>
+    </div>
+<script>
+    document.querySelector("#check-answers").addEventListener("click", () => {
+        document.querySelectorAll("[data-right-answer='True']").forEach((item) => item.style.color = "green");
+    });
+</script>
+{% endblock %}

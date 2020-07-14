@@ -1,0 +1,27 @@
+{% extends 'layout/index.html' %}
+
+{% load socialaccount %}
+{% load bootstrap4 %}
+{% block title %}
+Вход
+{% endblock %}
+
+{% block content %}
+
+<p>Вход</p>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.username.errors }}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Вход</button>
+</form>
+<p>Либо войдите с помощью:</p>
+<div class="row">
+    <div class="col-md-12"><a class="btn btn-lg btn-google btn-block text-uppercase btn-outline"
+                              href="{% provider_login_url 'google' %}"><img
+            src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a></div>
+    <a class="btn btn-block btn-social btn-facebook" href="{% provider_login_url 'facebook' method='oauth2' %}">
+        <span class="fa fa-facebook"></span> Facebook
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Тест {{ quiz.title }}
+{% endblock %}
+{% block content %}
+<style>
+    li {
+        list-style-type: none; /* Убираем маркеры */
+    }
+</style>
+{% if percent_res %}
+<p>Вашь результат</p>
+<p>Правильных ответов: {{score}}</p>
+<div class="alert alert-primary" role="alert">
+    {{percent_res}}%
+</div>
+{% elif percent_res == 0.0 %}
+<p>Вашь результат</p>
+<p>Правильных ответов: {{score}}</p>
+<div class="alert alert-primary" role="alert">
+    {{percent_res}}%
+</div>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    <p>Ответы теста "{{ quiz.title }}"</p>
+    <ul>
+        {% for k,v in answers.items %}
+        <li>{{ forloop.counter }}. {{ k }}
+            <ul>
+                {% for data in v %}
+                <li data-right-answer={{data.0}}>{{ forloop.counter }}. {{ data.1 }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </li>
+    </ul>
+</form>
+<button id="check-answers" class="btn btn btn-success">Просмотреть Ответы</button>
+<a href="{% url 'accounts:passing_quiz' quiz.pk %}">
+    <button class="btn btn-outline-primary">Пройти тест еще раз</button>
+</a>
+<a href="{% url 'accounts:index' %}"><button class="btn btn-outline-primary">Назад</button></a>
+<script>
+    document.querySelector("#check-answers").addEventListener("click", () => {
+        document.querySelectorAll("[data-right-answer='True']").forEach((item) => item.style.color = "green");
+    });
+</script>
+{% endblock %}

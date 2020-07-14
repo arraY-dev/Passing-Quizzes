@@ -1,0 +1,101 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Тест {{ quiz.title }}
+{% endblock %}
+{% block content %}
+<p>Тест "{{ quiz.title }}"</p>
+<p>{{ quiz.description }}</p>
+{% if last_res %}
+<p>Вашь послдений результат</p>
+<p>Правильных ответов: {{last_res.0.score }}</p>
+<div class="alert alert-primary" role="alert">
+    {{percent.0.percent}}%
+</div>
+{% endif %}
+{% if questions|length < 5 %}
+<h2>Тест имеет менее 5 вопросов и не может быть пройден</h2>
+{% else %}
+<p>Количество прохождений:
+    {{ quiz.counter_pass }}</p>
+<a href="{% url 'accounts:passing_quiz' quiz.pk %}">
+    <button type="button" class="btn btn-outline-primary">Пройти тест</button>
+</a>
+<br>
+<br>
+<ul>
+    {% for k,v in answers.items %}
+    <li>{{ forloop.counter }}. {{ k }}
+        <ul>
+            {% for data in v %}
+            <li data-right-answer={{data.0}}>{{ forloop.counter }}. {{ data.1 }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </li>
+</ul>
+<div class="comments__box-container">
+    <div class="comments__box">
+        <p class="comments__box-name">Добавить комментарий:</p>
+        <form method="post" class="comments__box-form">
+            {% csrf_token %}
+            {% bootstrap_form form layout='horizontal' %}
+            {% buttons submit='Добавить' %}{% endbuttons %}
+        </form>
+    </div>
+    {% if comments %}
+    <div class="comments__box-comments">
+        <ul class="media-list">
+            {% for comment in comments %}
+            <li class="media comment__item">
+                <div class="comment__item-container bg-secondary">
+                    <div class="comment__item-names rounded-circle">
+                        <p class="comment__item-name text-white bg-dark">
+                            {{ comment.author.username }}
+                        </p>
+                        <span class="text-muted pull-right">
+                        <small class=" text-white">{{ comment.created_at }}</small></span>
+                    </div>
+                    <div class="comment__item-content">
+                        <p>
+                            {{ comment.content }}
+                        </p>
+                    </div>
+                    <div class="comment__item-buttons">
+                        {% if quiz.user.pk == user.pk and comment.author.pk == user.pk %}
+                        <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                            <button class="btn btn-primary"> Исправить
+                            </button>
+                        </a>
+                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                            <button class="btn btn-primary"> Удалить
+                            </button>
+                        </a>
+                        {% elif comment.author.pk == user.pk %}
+                        <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                            <button class="btn btn-primary"> Исправить
+                            </button>
+                        </a>
+                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                            <button class="btn btn-primary"> Удалить
+                            </button>
+                        </a>
+                        {% elif quiz.user.pk == user.pk %}
+                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                            <button class="btn btn-primary"> Удалить
+                            </button>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+</div>
+</section>
+{% endif %}
+{% endif %}
+<a href="{% url 'accounts:index' %}"><i>Назад</i></a>
+{% endblock %}

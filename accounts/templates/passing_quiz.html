@@ -1,0 +1,44 @@
+{% extends 'layout/index.html' %}
+{% load bootstrap4 %}
+{% block title %}
+Тест {{ quiz.title }}
+{% endblock %}
+{% block content %}
+<style>
+    li {
+        list-style-type: none; /* Убираем маркеры */
+    }
+</style>
+{% if percent_res %}
+<p>Вашь результат</p>
+<p>Правильных ответов: {{score}}</p>
+<div class="alert alert-primary" role="alert">
+  {{percent_res}}%
+</div>
+{% elif percent_res == 0.0 %}
+<p>Вашь результат</p>
+<p>Правильных ответов: {{score}}</p>
+<div class="alert alert-primary" role="alert">
+  {{percent_res}}%
+</div>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    <p>Прохождение теста "{{ quiz.title }}"</p>
+    <ul>
+        {% for k,v in answers.items %}
+        {{ forloop.counter }}. {{ k }}
+        <ul>
+            {% for data in v %}
+            <li><input name="{{ k }}" value="{{ data }}" type="radio"> {{ forloop.counter }}. {{ data.1 }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </ul>
+    <button type="submit" class="btn btn-outline-primary">Закончить тест</button>
+</form>
+<br>
+<br>
+<a href="{% url 'accounts:index' %}"><i>Назад</i></a>
+
+{% endblock %}

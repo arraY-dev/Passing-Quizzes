@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'quiz/style.css' %}">
+    <title>{% block title %}Главная{% endblock %} - Quiz tutorial</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'accounts:index' %}">Главная</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'accounts:profile' %}">Профиль <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:logout' %}">Выход</a>
+            </li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:login' %}">Вход</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <h1 class="mt-2">Платформа для прохождения тестов</h1>
+            <hr class="mt-0 mb-4">
+            {% block content %}
+            <p>Все тесты</p>
+            <p>Найти тест: </p>
+            <form>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+            </form>
+            <br>
+            {% if not quizes %}
+            <form method="get">
+                {% csrf_token %}
+                <input type="checkbox" name="check">Пройденные тесты
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <h3>Тесты отсутствуют</h3>
+            </form>
+            {% else %}
+            Сортировать по дате<i class="fa fa-sort" aria-hidden="true" id="btn-sort"></i>
+            <br>
+            <br>
+            <form method="get">
+                {% csrf_token %}
+                <input type="checkbox" name="check">Пройденные тесты
+                <button type="submit" class="btn btn-primary">Применить</button>
+            </form>
+            <br>
+            <section class="d-flex flex-column" id="container__tests">
+                {% for quiz in quizes %}
+                <div class="container">
+                    {% url 'accounts:detail_quiz' pk=quiz.pk as url %}
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="p-3 mb-2 bg-secondary text-dark">
+                                <p class="badge badge-info">{{ quiz.title }}</p>
+                                <p>Атор: {{ quiz.user.username }}</p>
+                                <p>Создан: {{ quiz.created_at }}</p>
+                                {% if quiz.user.username == request.user.username %}
+                                <p>Это вашь тест</p>
+                                {% else %}
+                                <a href="{{ url }}{{ all }}">
+                                    <button type="submit" class="btn btn-primary">Подробнее</button>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+        </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+</div>
+<script>
+    document.querySelector("#btn-sort").addEventListener("click", () => {
+        if (document.querySelector("#container__tests").classList.contains('flex-column-reverse')) {
+            document.querySelector("#container__tests").classList.remove("flex-column-reverse");
+        } else {
+            document.querySelector("#container__tests").classList.add("flex-column-reverse");
+        }
+    });
+</script>
+</body>
+</html>

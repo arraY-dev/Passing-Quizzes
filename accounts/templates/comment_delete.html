@@ -1,0 +1,22 @@
+{% extends 'layout/index.html' %}
+
+{% load bootstrap4 %}
+{% block title %}
+Удаление комментария
+{% endblock %}
+
+{% block content %}
+<div class="about__container">
+    <p class="about__name">Удалить комментарий?</p>
+    <div class="about__info">
+        "{{comment.content }}"
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% buttons submit='Удалить' %}{% endbuttons %}
+    </form>
+    <p><a href="{% url 'accounts:detail_quiz' pk=comment.quiz.pk %}">
+        <button class="btn-cancel">Отмена</button>
+    </a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'layout/index.html' %}
+
+{% load bootstrap4 %}
+{% block title %}
+Удаление теста
+{% endblock %}
+
+{% block content %}
+<div class="about__container">
+    <p class="about__name">Удалить Тест "{{ quiz.title }}"?</p>
+    <div class="about__info">
+        "{{quiz.title }}"
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% buttons submit='Удалить' %}{% endbuttons %}
+    </form>
+    <p><a href="{% url 'accounts:users_quizes' %}">
+        <button class="btn-cancel">Отмена</button>
+    </a></p>
+</div>
+{% endblock %}

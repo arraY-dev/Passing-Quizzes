@@ -1,0 +1,16 @@
+{% extends 'layout/index.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% block title %}
+Редактирование профиля {{ user.username }}
+{% endblock %}
+{% block content %}
+<p>Изменения данных пользователя {{user.username}}</p>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.as_p }}
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="#" onclick="window.history.back(); return false;" title="Cancel"><i>Отмена</i></a>
+</form>
+{% endblock %}
