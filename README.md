@@ -9,4 +9,4 @@ Application Launch Steps:
 5. In admin panel add Social app for Google or Facebook.
 Create a google app to obtain a key and secret through the developer console. 
 (https://django-allauth.readthedocs.io/en/latest/providers.html#google)
-6. Exit from admin panel, create usser and pass quizzes.
+6. Exit from admin panel, create user and pass quizzes.
