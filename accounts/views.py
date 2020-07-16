@@ -193,26 +193,22 @@ def quiz_change(request, quiz_pk):
     return render(request, 'change_quiz.html', context)
 
 
-class QuizChangeView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
-    model = Quiz
-    template_name = 'change_quiz.html'
-    form_class = ChangeQuizForm
-    success_url = reverse_lazy('accounts:users_quizes')
-    success_message = 'Тест изменён'
-
-
-class QuizCreateView(LoginRequiredMixin, CreateView):
-    login_url = '/login/'
-    model = Quiz
-    fields = ('title', 'description')
-    template_name = 'create_user_quizes.html'
-
-    def form_valid(self, form):
-        quiz = form.save(commit=False)
-        quiz.user = self.request.user
-        quiz.save()
-        messages.success(self.request, 'Тест создан! Добавьте к нему вопросы.')
-        return redirect('accounts:users_quizes')
+@user_required
+def quiz_add(request):
+    if request.method == 'POST':
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            formset = QuestionFormset(request.POST, instance=quiz)
+            if formset.is_valid():
+                form.save()
+                formset.save()
+                return redirect('accounts:users_quizes')
+    else:
+        form = QuizForm(initial={'user': request.user.pk})
+        formset = QuestionFormset()
+    context = {'form': form, 'formset': formset}
+    return render(request, 'change_quiz.html', context)
 
 
 def index(request):

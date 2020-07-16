@@ -31,11 +31,11 @@
     </div>
     {% endfor %}
 </div>
-<a href="{% url 'accounts:user_add_quiz' %}">Создать тест</a>
+<a href="{% url 'accounts:quiz_add' %}">Создать тест</a>
 <p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
 {% else %}
 <h3>Вы не добавили ни одного теста</h3>
-<a href="{% url 'accounts:user_add_quiz' %}">Создать тест</a>
+<a href="{% url 'accounts:quiz_add' %}">Создать тест</a>
 <p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
 {% endif %}
 {% endblock %}

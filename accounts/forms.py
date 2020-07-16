@@ -52,7 +52,8 @@ QuestionFormset = inlineformset_factory(Quiz, Question, fields='__all__', formse
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ('title', 'description')
+        fields = ('user', 'title', 'description')
+        widgets = {'user': forms.HiddenInput}
 
 
 class QuestionForm(forms.ModelForm):

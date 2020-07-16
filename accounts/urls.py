@@ -19,7 +19,7 @@ urlpatterns = [
 
     # Profile user
     path('account/profile/', views.profileView, name='profile'),
-    path('profile/users/add-quiz/', views.QuizCreateView.as_view(), name='user_add_quiz'),
+    path('profile/users/add-quiz/', views.quiz_add, name='quiz_add'),
     path('profile/users/quizes/', views.users_quizes, name='users_quizes'),
     path('profile/update/<int:pk>/', views.profile_change, name='profile_update'),
 
