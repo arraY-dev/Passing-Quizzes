@@ -2,7 +2,7 @@
 
 Application Launch Steps:
 
-1. Install all libraries from a file requirements.txt.
+1. Install all libraries from a file requirements.txt with command pip install -r requirements.txt
 2. Make migrations and migrate.
 3. Dump data to database from users.json file with command "python manage.py loaddata users.json". This file added a supeuser.
 4. Dump data to database from quizzes.json file with command "python manage.py loaddata tests/fixtures/quizzes.json". This file added two quizzes.
