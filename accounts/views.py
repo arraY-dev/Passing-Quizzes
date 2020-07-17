@@ -1,26 +1,18 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.messages.views import SuccessMessageMixin
-from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
 
-from .decorators import user_required
 from .forms import RegisterUserForm, LoginForm, UserForm, AIFormSet, SearchForm, QuestionForm, AnswersFormset, \
-    UserCommentForm, ChangeQuizForm, QuizForm, QuestionFormset
-from .models import Quiz, Question, Answer, PassedUserQuiz, Comment
-import pdb
-
+    UserCommentForm, QuizForm, QuestionFormset
+from .models import Quiz, Question, PassedUserQuiz, Comment
 from .utilities import show_result
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def comment_delete(request, quiz_pk, pk):
     comment = get_object_or_404(Comment, pk=pk)
     if request.method == 'POST':
@@ -35,13 +27,13 @@ def comment_delete(request, quiz_pk, pk):
         return render(request, 'comment_delete.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def comment_change(request, quiz_pk, pk):
     comment = get_object_or_404(Comment, pk=pk)
     if request.method == 'POST':
         form = UserCommentForm(request.POST, instance=comment)
         if form.is_valid():
-            comment = form.save()
+            form.save()
             messages.add_message(request, messages.SUCCESS, 'Комментарий исправлен')
             return redirect('accounts:profile_quiz_detail', quiz_pk)
     else:
@@ -50,7 +42,7 @@ def comment_change(request, quiz_pk, pk):
     return render(request, 'comment_change.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def passing_quiz(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     questions = Question.objects.filter(quiz=quiz)
@@ -58,19 +50,16 @@ def passing_quiz(request, pk):
 
     for question in questions:
         questions_with_answers[question] = question.answers.all().values_list('is_correct', 'text')
-        # answers = Answer.objects.select_related('question').filter(question=question).
-        # values_list('question__text', 'text', 'is_correct')
 
     if request.method == 'POST':
         context = show_result(request, questions, quiz, questions_with_answers)
         return render(request, 'passing_result.html', context)
-        # if Question.objects.select_related('k').filter(answers__text=v).exists():
-        #     print(k, v, count_questions)
+
     context = {'quiz': quiz, 'questions': questions, 'answers': questions_with_answers}
     return render(request, 'passing_quiz.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def detail_quiz(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     questions = Question.objects.filter(quiz=quiz)
@@ -79,7 +68,6 @@ def detail_quiz(request, pk):
     questions_with_answers = dict()
     for question in questions:
         questions_with_answers[question] = question.answers.all().values_list('is_correct', 'text')
-    # answers = Answer.objects.select_related('question').filter(question=question).values_list('text', 'is_correct')
     comments = Comment.objects.filter(quiz=pk)
     initial = {'quiz': quiz.pk}
     if request.user.is_authenticated:
@@ -100,14 +88,13 @@ def detail_quiz(request, pk):
     return render(request, 'detail_quiz.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def profile_quiz_detail(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     questions = Question.objects.filter(quiz=quiz)
     questions_with_answers = dict()
     for question in questions:
         questions_with_answers[question] = question.answers.all().values_list('is_correct', 'text')
-    # answers = Answer.objects.select_related('question').filter(question=question).values_list('text', 'is_correct')
     comments = Comment.objects.filter(quiz=pk)
     initial = {'quiz': quiz.pk}
     if request.user.is_authenticated:
@@ -128,7 +115,7 @@ def profile_quiz_detail(request, pk):
     return render(request, 'detail_user_quiz.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def question_add(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     if request.method == 'POST':
@@ -148,7 +135,7 @@ def question_add(request, pk):
     return render(request, 'add_user_question_answers.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def quiz_delete(request, quiz_pk):
     quiz = get_object_or_404(Quiz, pk=quiz_pk)
     if request.method == 'POST':
@@ -160,8 +147,7 @@ def quiz_delete(request, quiz_pk):
         return render(request, 'quiz_delete.html', context)
 
 
-
-@user_required
+@login_required(login_url='accounts:login')
 def users_quizes(request):
     quizes = Quiz.objects.filter(user=request.user)
     if 'keyword' in request.GET:
@@ -175,8 +161,7 @@ def users_quizes(request):
     return render(request, 'user_quizes.html', context)
 
 
-
-@user_required
+@login_required(login_url='accounts:login')
 def quiz_change(request, quiz_pk):
     quiz = get_object_or_404(Quiz, id=quiz_pk)
     if request.method == 'POST':
@@ -193,7 +178,7 @@ def quiz_change(request, quiz_pk):
     return render(request, 'change_quiz.html', context)
 
 
-@user_required
+@login_required(login_url='accounts:login')
 def quiz_add(request):
     if request.method == 'POST':
         form = QuizForm(request.POST)
@@ -208,7 +193,7 @@ def quiz_add(request):
         form = QuizForm(initial={'user': request.user.pk})
         formset = QuestionFormset()
     context = {'form': form, 'formset': formset}
-    return render(request, 'change_quiz.html', context)
+    return render(request, 'create_user_quizes.html', context)
 
 
 def index(request):
@@ -232,7 +217,7 @@ def index(request):
     return render(request, 'layout/index.html', context)
 
 
-@login_required
+@login_required(login_url='accounts:login')
 def profile_change(request, pk):
     try:
         user = User.objects.get(id=pk)
@@ -254,7 +239,7 @@ def profile_change(request, pk):
         return HttpResponseNotFound("<h2>Профиль не найден</h2>")
 
 
-@login_required
+@login_required(login_url='accounts:login')
 def profileView(request):
     return render(request, 'profile.html')
 

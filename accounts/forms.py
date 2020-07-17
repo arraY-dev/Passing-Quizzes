@@ -2,17 +2,11 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.forms import inlineformset_factory, TextInput, SelectDateWidget, CheckboxInput
+from django.forms import inlineformset_factory, TextInput, SelectDateWidget
 from django.forms.models import BaseInlineFormSet
 
 from .middlewares import help_text
 from .models import Profile, Question, Answer, Quiz, Comment
-
-
-class ChangeQuizForm(forms.ModelForm):
-    class Meta:
-        model = Quiz
-        fields = ('title', 'description')
 
 
 class UserCommentForm(forms.ModelForm):
@@ -25,7 +19,7 @@ class UserCommentForm(forms.ModelForm):
 AnswersFormset = inlineformset_factory(Question, Answer, fields='__all__', extra=4,
                                        widgets={'text': TextInput(attrs={'required': True})})
 
-AnswersEditFormset = inlineformset_factory(Question, Answer, fields=('text', 'is_correct'), extra=4)
+AnswersEditFormset = inlineformset_factory(Question, Answer, fields=('text', 'is_correct'), extra=4, max_num=4)
 
 
 class BaseChildrenFormset(BaseInlineFormSet):
@@ -35,7 +29,7 @@ class BaseChildrenFormset(BaseInlineFormSet):
     def add_fields(self, form, index):
         super(BaseChildrenFormset, self).add_fields(form, index)
 
-        # save the formset in the 'nested' property
+        # save the formset in the 'answer' property
         form.answer = AnswersEditFormset(
             instance=form.instance,
             data=form.data if form.is_bound else None,
@@ -43,6 +37,41 @@ class BaseChildrenFormset(BaseInlineFormSet):
             prefix='address-%s-%s' % (
                 form.prefix,
                 AnswersEditFormset.get_default_prefix()))
+
+    def is_valid(self):
+        result = super(BaseChildrenFormset, self).is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'answer'):
+                    result = result and form.answer.is_valid()
+        return result
+
+    def save(self, commit=True):
+        result = super(BaseChildrenFormset, self).save(commit=commit)
+        for form in self.forms:
+            if hasattr(form, 'answer'):
+                if not self._should_delete_form(form):
+                    form.answer.save(commit=commit)
+        return result
+
+    def clean(self):
+        if any(self.errors):
+            return
+
+        for form in self.forms:
+            if self.can_delete and self._should_delete_form(form):
+                continue
+            question = form.cleaned_data.get('text')
+
+            try:
+                correct_answers = [correct.get('is_correct') for correct in form.answer.cleaned_data]
+                for i in form.answer.cleaned_data:
+                    if question and (len(i) < 5):
+                        raise forms.ValidationError("Вопросы не могут быть без ответов.")
+                    if question and not any(correct_answers):
+                        raise forms.ValidationError("Вопрос должен иметь хоть один првильный ответ.")
+            except AttributeError:
+                raise forms.ValidationError("Вопросы не могут быть без ответов.")
 
 
 QuestionFormset = inlineformset_factory(Quiz, Question, fields='__all__', formset=BaseChildrenFormset,

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # Local
     'accounts',
+    'tests',
 
     # 3rd party
     'allauth',
