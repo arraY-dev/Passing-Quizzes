@@ -1,21 +1,21 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 
 {% load bootstrap4 %}
 {% block title %}
-Удаление теста
+Удаление комментария
 {% endblock %}
 
 {% block content %}
 <div class="about__container">
-    <p class="about__name">Удалить Тест "{{ quiz.title }}"?</p>
+    <p class="about__name">Удалить комментарий?</p>
     <div class="about__info">
-        "{{quiz.title }}"
+        "{{comment.content }}"
     </div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% buttons submit='Удалить' %}{% endbuttons %}
     </form>
-    <p><a href="{% url 'accounts:users_quizes' %}">
+    <p><a href="{% url 'tests:detail_quiz' pk=comment.quiz.pk %}">
         <button class="btn-cancel">Отмена</button>
     </a></p>
 </div>

@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 
 from . import models
+from tests.models import PassedUserQuiz
 
 
 class ResultUserAdmin(admin.TabularInline):
-    model = models.PassedUserQuiz
+    model = PassedUserQuiz
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -16,8 +17,4 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 admin.site.register(models.Profile)
-admin.site.register(models.Answer)
-admin.site.register(models.Question)
-admin.site.register(models.Quiz)
-admin.site.register(models.Comment)
-admin.site.register(models.PassedUserQuiz)
+

@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 {% load bootstrap4 %}
 {% block title %}
 Тест {{ quiz.title }}
@@ -38,7 +38,7 @@
     </ul>
 </form>
 <button id="check-answers" class="btn btn btn-success">Просмотреть Ответы</button>
-<a href="{% url 'accounts:passing_quiz' quiz.pk %}">
+<a href="{% url 'tests:passing_quiz' quiz.pk %}">
     <button class="btn btn-outline-primary">Пройти тест еще раз</button>
 </a>
 <a href="{% url 'accounts:index' %}"><button class="btn btn-outline-primary">Назад</button></a>

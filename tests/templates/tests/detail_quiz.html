@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 {% load bootstrap4 %}
 {% block title %}
 Тест {{ quiz.title }}
@@ -18,7 +18,7 @@
 {% else %}
 <p>Количество прохождений:
     {{ quiz.counter_pass }}</p>
-<a href="{% url 'accounts:passing_quiz' quiz.pk %}">
+<a href="{% url 'tests:passing_quiz' quiz.pk %}">
     <button type="button" class="btn btn-outline-primary">Пройти тест</button>
 </a>
 <br>
@@ -63,25 +63,25 @@
                     </div>
                     <div class="comment__item-buttons">
                         {% if quiz.user.pk == user.pk and comment.author.pk == user.pk %}
-                        <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                        <a href="{% url 'tests:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
                             <button class="btn btn-primary"> Исправить
                             </button>
                         </a>
-                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <a href="{% url 'tests:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
                             <button class="btn btn-primary"> Удалить
                             </button>
                         </a>
                         {% elif comment.author.pk == user.pk %}
-                        <a href="{% url 'accounts:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
+                        <a href="{% url 'tests:comment_change' quiz_pk=quiz.pk pk=comment.pk %}">
                             <button class="btn btn-primary"> Исправить
                             </button>
                         </a>
-                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <a href="{% url 'tests:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
                             <button class="btn btn-primary"> Удалить
                             </button>
                         </a>
                         {% elif quiz.user.pk == user.pk %}
-                        <a href="{% url 'accounts:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
+                        <a href="{% url 'tests:comment_delete' quiz_pk=comment.quiz.pk pk=comment.pk %}">
                             <button class="btn btn-primary"> Удалить
                             </button>
                         </a>

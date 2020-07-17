@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 {% load bootstrap4 %}
 {% block title %}
 Тесты пользователя {{ user.username }}
@@ -19,23 +19,23 @@
     <div class="container">
         <div class="row">
             <div class="p-3 mb-2 bg-secondary text-dark">
-                {% url 'accounts:profile_quiz_detail' pk=quiz.pk as url %}
+                {% url 'tests:profile_quiz_detail' pk=quiz.pk as url %}
                 <a href="{{ url }}{{ all }}" class="badge badge-info">{{ quiz.title }}
                 </a>
                 <p>Количество прохождений:
                     {{ quiz.counter_pass }}</p>
-                <a href="{% url 'accounts:profile_quiz_detail' quiz.pk %}"
+                <a href="{% url 'tests:profile_quiz_detail' quiz.pk %}"
                    class="badge badge-info">Подробнее</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
-<a href="{% url 'accounts:quiz_add' %}">Создать тест</a>
+<a href="{% url 'tests:quiz_add' %}">Создать тест</a>
 <p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
 {% else %}
 <h3>Вы не добавили ни одного теста</h3>
-<a href="{% url 'accounts:quiz_add' %}">Создать тест</a>
+<a href="{% url 'tests:quiz_add' %}">Создать тест</a>
 <p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
 {% endif %}
 {% endblock %}

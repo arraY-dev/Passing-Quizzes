@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 
 {% load bootstrap4 %}
 {% block title %}
@@ -14,7 +14,7 @@
             {% bootstrap_form form layout='horizontal' %}
             {% buttons submit='Редактировать' %}{% endbuttons %}
         </form>
-        <p class="btn-cancel_container"><a href="{% url 'accounts:detail_quiz' pk=comment.quiz.pk %}">
+        <p class="btn-cancel_container"><a href="{% url 'tests:detail_quiz' pk=comment.quiz.pk %}">
             <button class="btn-cancel btn-edit-comment">Отмена</button>
         </a></p>
     </div>

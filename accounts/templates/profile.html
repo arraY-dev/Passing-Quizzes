@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 {% load bootstrap4 %}
 {% load static %}
 {% block title %}
@@ -32,6 +32,6 @@
 {% else %}
 <p>О себе {{user.profile.about_me}}</p>
 {% endif %}
-<a href="{% url 'accounts:users_quizes' %}">Мои тесты</a>
+<a href="{% url 'tests:users_quizes' %}">Мои тесты</a>
 <a href="{% url 'accounts:profile_update' request.user.pk %}">Изменить свой профиль</a>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'layout/index.html' %}
+{% extends 'accounts/layout/index.html' %}
 {% load bootstrap4 %}
 {% block title %}
 Тест {{ quiz.title }}
@@ -39,6 +39,6 @@
 </form>
 <br>
 <br>
-<a href="{% url 'accounts:index' %}"><i>Назад</i></a>
+<a href="{% url 'accounts:index' %}"><i>К списку тестов</i></a>
 
 {% endblock %}
