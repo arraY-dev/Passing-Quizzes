@@ -4,38 +4,39 @@
 Тесты пользователя {{ user.username }}
 {% endblock %}
 {% block content %}
-<div>
-    <div>
-        <form>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-success">Поиск</button>
-        </form>
-    </div>
+<div class="container">
+    <form class="quiz__search-form">
+        {% bootstrap_form form show_label=False %}
+        {% bootstrap_button content='Поиск' button_type='submit' %}
+    </form>
     {% if quizes %}
     <br>
     <h3>Все тесты пользователя {{ user.username }}</h3>
     {% for quiz in quizes %}
-    <div class="container">
-        <div class="row">
-            <div class="p-3 mb-2 bg-secondary text-dark">
-                {% url 'tests:profile_quiz_detail' pk=quiz.pk as url %}
-                <a href="{{ url }}{{ all }}" class="badge badge-info">{{ quiz.title }}
-                </a>
-                <p>Количество прохождений:
-                    {{ quiz.counter_pass }}</p>
-                <a href="{% url 'tests:profile_quiz_detail' quiz.pk %}"
-                   class="badge badge-info">Подробнее</a>
-            </div>
+    {% url 'tests:profile_quiz_detail' pk=quiz.pk as url %}
+    <div class="container d-flex flex-column">
+        <h5 class="card-header border border-primary"><a href="{{ url }}{{ all }}">{{ quiz.title }}
+        </a></h5>
+        <div class="p-3 mb-2 bg-secondary text-dark">
+            <p class="text-light">Количество прохождений:
+                {{ quiz.counter_pass }}</p>
+            <a href="{% url 'tests:profile_quiz_detail' quiz.pk %}"
+               class="btn btn-primary">Подробнее</a>
         </div>
     </div>
     {% endfor %}
 </div>
-<a href="{% url 'tests:quiz_add' %}">Создать тест</a>
-<p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
+<div>
+    <a href="{% url 'tests:quiz_add' %}" class="btn btn-primary">Создать тест</a>
+    <p></p>
+    <p><a href="{% url 'accounts:profile' %}" class="btn btn-primary"><i>Назад</i></a></p>
+</div>
 {% else %}
-<h3>Вы не добавили ни одного теста</h3>
-<a href="{% url 'tests:quiz_add' %}">Создать тест</a>
-<p><a href="{% url 'accounts:profile' %}"><i>Назад</i></a></p>
+<div>
+    <h3>Вы не добавили ни одного теста</h3>
+    <a href="{% url 'tests:quiz_add' %}" class="btn btn-primary">Создать тест</a>
+    <p></p>
+    <p><a href="{% url 'accounts:profile' %}" class="btn btn-primary"><i>Назад</i></a></p>
+</div>
 {% endif %}
 {% endblock %}

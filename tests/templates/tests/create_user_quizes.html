@@ -4,14 +4,14 @@
 Создание теста
 {% endblock %}
 {% block content %}
-<p>Создание теста</p>
-<form method="post" enctype="multipart/form-data">
+<h2>Создание теста</h2>
+<form method="post" enctype="multipart/form-data" class="create-test d-flex">
     {% csrf_token %}
     {{ form.as_p }}
     {{ formset.management_form }}
     {{ formset.non_form_errors }}
     {% for question_form in formset.forms %}
-    <div class="p-3 mb-2 bg-primary text-white" id="sectionForm">
+    <div class="question" id="sectionForm">
         {{ question_form.as_p }}
     </div>
     {{ question_form.answer.management_form }}
@@ -21,6 +21,6 @@
     {% endfor %}
     {% endfor %}
     <button type="submit" class="btn btn-success">Создать</button>
-    <a href="#" onclick="window.history.back(); return false;" title="Cancel"><i>Отмена</i></a>
+    <a href="#" onclick="window.history.back(); return false;" title="Cancel" class="btn btn-primary btn-cancel"><i>Отмена</i></a>
 </form>
 {% endblock %}
