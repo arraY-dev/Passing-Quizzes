@@ -5,33 +5,78 @@
 Профиль
 {% endblock %}
 {% block content %}
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<style>
+    .glyphicon {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+
+    small {
+        display: block;
+        line-height: 1.428571429;
+        color: #999;
+    }
+</style>
 <p>Профиль пользователя {{user.username}}</p>
-{% if not user.first_name and not user.last_name %}
-<p>Фамилия и Имя не указаны </p>
-{% else %}
-<p>Имя: {{user.first_name}}</p>
-<p>Фамилия: {{user.last_name}}</p>
-{% endif %}
-{% if user.profile.photo %}
-<div>
-    <img src="{{ request.user.profile.photo.url }}" alt="default jpg">
-</div>
-{% else %}
-<div>
-    <img src="{% static 'photos/images/default_profile.jpg' %}" width="150" height="150"
-         alt="default jpg">
-</div>
-{% endif %}
-{% if not user.profile.birth_date %}
-<p>Дата рождения не указана. Формат ввода даты (день.месяц.год)</p>
-{% else %}
-<p>Дата рождения {{user.profile.birth_date}}</p>
-{% endif %}
+
+
 {% if not user.profile.about_me %}
 <p>Данные о себе не указаны</p>
 {% else %}
-<p>О себе {{user.profile.about_me}}</p>
+<p>О себе: {{user.profile.about_me}}</p>
 {% endif %}
-<a href="{% url 'tests:users_quizes' %}">Мои тесты</a>
-<a href="{% url 'accounts:profile_update' request.user.pk %}">Изменить свой профиль</a>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        {% if user.profile.photo %}
+                        <img src="{{ request.user.profile.photo.url }}" alt="default jpg"
+                             class="img-rounded img-responsive"/>
+                        {% else %}
+                        <img src="{% static 'photos/images/default_profile.jpg' %}" width="150" height="150"
+                             alt="default jpg" class="img-rounded img-responsive"/>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4>
+                            {% if not user.first_name and not user.last_name %}
+                            Фамилия и Имя не указаны
+                            {% else %}
+                            Имя: {{user.first_name}}
+                            Фамилия: {{user.last_name}}
+                            {% endif %}
+                        </h4>
+                        <p>
+                            <i class="glyphicon glyphicon-gift"></i>
+                            {% if not user.profile.birth_date %}
+                            Дата рождения не указана. Формат ввода даты (день.месяц.год)
+                            {% else %}
+                            Дата рождения {{user.profile.birth_date}}
+                            {% endif %}</p>
+                        <!-- Split button -->
+                        <div class="btn-group">
+                            <a href="{% url 'tests:users_quizes' %}" class="btn btn-primary">Мои тесты
+                            </a>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="btn-group">
+                            <a href="{% url 'accounts:profile_update' request.user.pk %}" class="btn btn-primary">Изменить
+                                свой профиль</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 {% endblock %}

@@ -1,0 +1,44 @@
+.quiz__search-form {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-right: 1rem;
+}
+
+.quiz__search-form .btn-primary {
+    background-color: #169bd6;
+}
+
+.card-header {
+    margin-top: 20px;
+}
+
+.all-tests {
+    justify-content: space-between;
+}
+
+.tests-params {
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.submit {
+    margin-left: 50px;
+}
+
+
+.create-test {
+    flex-direction: column;
+}
+
+.question {
+    padding-top: 20px;
+    border-top: 2px solid grey;
+    margin-top: 30px;
+}
+
+.btn-cancel {
+    width: 150px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}

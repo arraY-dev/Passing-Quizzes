@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+{% load static %}
+{% load bootstrap4 %}
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +10,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'quiz/style.css' %}">
     <title>{% block title %}Главная{% endblock %} - Quiz tutorial</title>
 </head>
@@ -16,7 +17,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'accounts:index' %}">Главная</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class=" navbar-collapse" id="navbarSupportedContent">
         {% if user.is_authenticated %}
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -46,52 +47,51 @@
             <h1 class="mt-2">Платформа для прохождения тестов</h1>
             <hr class="mt-0 mb-4">
             {% block content %}
-            <p>Все тесты</p>
-            <p>Найти тест: </p>
-            <form>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
-            </form>
+            <div class="d-flex all-tests">
+                <h2>Все тесты</h2>
+                <div class="d-flex">
+                    <p>Найти тест:
+                    <pre>  </pre>
+                    </pre>
+                    <form class="quiz__search-form">
+                        {% bootstrap_form form show_label=False %}
+                        {% bootstrap_button content='Поиск' button_type='submit' %}
+                    </form>
+                </div>
+            </div>
             <br>
             {% if not quizes %}
-            <form method="get">
+            <form method="get" class="quiz__search-form">
                 {% csrf_token %}
-                <input type="checkbox" name="check">Пройденные тесты
-                <button type="submit" class="btn btn-primary">Применить</button>
+                Пройденные тесты
+                <input type="checkbox" name="check">
+                {% bootstrap_button content='Поиск' button_type='submit' %}
                 <h3>Тесты отсутствуют</h3>
             </form>
             {% else %}
-            Сортировать по дате<i class="fa fa-sort" aria-hidden="true" id="btn-sort"></i>
-            <br>
-            <br>
-            <form method="get">
-                {% csrf_token %}
-                <input type="checkbox" name="check">Пройденные тесты
-                <button type="submit" class="btn btn-primary">Применить</button>
-            </form>
-            <br>
+            <div class="d-flex tests-params">
+                <p>Сортировать по дате <i class="fa fa-sort" aria-hidden="true" id="btn-sort"></i></p>
+                <form method="get" class="quiz__search-form">
+                    {% csrf_token %}
+                    <input type="checkbox" name="check">Пройденные тесты
+                    {% bootstrap_button content='Поиск' button_type='submit' %}
+                </form>
+                <br>
+            </div>
             <section class="d-flex flex-column" id="container__tests">
                 {% for quiz in quizes %}
-                <div class="container">
-                    {% url 'tests:detail_quiz' pk=quiz.pk as url %}
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="p-3 mb-2 bg-secondary text-dark">
-                                <p class="badge badge-info">{{ quiz.title }}</p>
-                                <p>Атор: {{ quiz.user.username }}</p>
-                                <p>Создан: {{ quiz.created_at }}</p>
-                                {% if quiz.user.username == request.user.username %}
-                                <p>Это вашь тест</p>
-                                {% else %}
-                                <a href="{{ url }}{{ all }}">
-                                    <button type="submit" class="btn btn-primary">Подробнее</button>
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-sm">
-                        </div>
+                {% url 'tests:detail_quiz' pk=quiz.pk as url %}
+                <div class="container d-flex flex-column">
+                    <h5 class="card-header border border-primary">Тест</h5>
+                    <div class="card-body border border-primary bg-gradient-light text-dark">
+                        <h5 class="card-title">{{ quiz.title }}</h5>
+                        <p class="card-text">{{ quiz.user.username }}</p>
+                        <p class="card-text">Создан: {{ quiz.created_at }}</p>
+                        {% if quiz.user.username == request.user.username %}
+                        <p class="card-text">Это вашь тест</p>
+                        {% else %}
+                        <a href="{{ url }}{{ all }}" class="btn btn-primary">Подробнее</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
