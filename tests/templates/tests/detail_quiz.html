@@ -48,13 +48,13 @@
         <ul class="media-list">
             {% for comment in comments %}
             <li class="media comment__item">
-                <div class="comment__item-container bg-secondary">
-                    <div class="comment__item-names rounded-circle">
-                        <p class="comment__item-name text-white bg-dark">
+                <div class="comment__item-container">
+                    <div class="comment__item-names">
+                        <p class="comment__item-name">
                             {{ comment.author.username }}
                         </p>
                         <span class="text-muted pull-right">
-                        <small class=" text-white">{{ comment.created_at }}</small></span>
+                        <small class="text-muted">{{ comment.created_at }}</small></span>
                     </div>
                     <div class="comment__item-content">
                         <p>

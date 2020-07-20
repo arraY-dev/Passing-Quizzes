@@ -8,12 +8,12 @@
 
 {% block content %}
 
-<p>Вход</p>
+<h3>Вход</h3>
 <form method="POST">
     {% csrf_token %}
     {{ form.username.errors }}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Вход</button>
+    <button type="submit" class="btn btn-success">Вход</button>
 </form>
 <p>Либо войдите с помощью:</p>
 <div class="row">

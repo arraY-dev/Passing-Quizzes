@@ -34,12 +34,14 @@
         {% endfor %}
     </li>
 </ul>
-<button id="check-answers">Просмотреть Ответы</button>
+<button id="check-answers" class="btn btn btn-success">Просмотреть Ответы</button>
 {% endif %}
-<p><a href="{% url 'tests:question_add' quiz.pk %}">Добавить вопрос и ответы</a></p>
-<p><a href="{% url 'tests:quiz_change' quiz.pk %}">Изменить тест</a></p>
-<p><a href="{% url 'tests:quiz_delete' quiz_pk=quiz.pk %}">Удалить тест</a></p>
-<p><a href="{% url 'tests:users_quizes' %}"><i>Назад</i></a></p>
+<div class="d-flex edit-test">
+<p><a href="{% url 'tests:question_add' quiz.pk %}" class="btn btn-primary">Добавить вопрос и ответы</a></p>
+<p><a href="{% url 'tests:quiz_change' quiz.pk %}" class="btn btn-primary">Изменить тест</a></p>
+<p><a href="{% url 'tests:quiz_delete' quiz_pk=quiz.pk %}" class="btn btn-primary">Удалить тест</a></p>
+</div>
+   <p><a href="{% url 'tests:users_quizes' %}" class="btn btn-primary"><i>Назад</i></a></p>
 {% if comments %}
 <br>
 <br>
@@ -47,13 +49,13 @@
     <ul class="media-list">
         {% for comment in comments %}
         <li class="media comment__item">
-            <div class="comment__item-container bg-secondary">
-                <div class="comment__item-names rounded-circle">
-                    <p class="comment__item-name text-white bg-dark">
+            <div class="comment__item-container">
+                <div class="comment__item-names">
+                    <p class="comment__item-name">
                         {{ comment.author.username }}
                     </p>
                     <span class="text-muted pull-right">
-                        <small class=" text-white">{{ comment.created_at }}</small>
+                        <small class="text-muted">{{ comment.created_at }}</small>
                     </span>
                 </div>
                 <div class="comment__item-content">

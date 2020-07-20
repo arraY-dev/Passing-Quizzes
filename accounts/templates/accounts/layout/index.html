@@ -1,7 +1,7 @@
 {% load static %}
 {% load bootstrap4 %}
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -47,19 +47,12 @@
             <h1 class="mt-2">Платформа для прохождения тестов</h1>
             <hr class="mt-0 mb-4">
             {% block content %}
-            <div class="d-flex all-tests">
                 <h2>Все тесты</h2>
-                <div class="d-flex">
-                    <p>Найти тест:
-                    <pre>  </pre>
-                    </pre>
                     <form class="quiz__search-form">
+                        Найти тест:
                         {% bootstrap_form form show_label=False %}
                         {% bootstrap_button content='Поиск' button_type='submit' %}
                     </form>
-                </div>
-            </div>
-            <br>
             {% if not quizes %}
             <form method="get" class="quiz__search-form">
                 {% csrf_token %}
@@ -88,7 +81,7 @@
                         <p class="card-text">{{ quiz.user.username }}</p>
                         <p class="card-text">Создан: {{ quiz.created_at }}</p>
                         {% if quiz.user.username == request.user.username %}
-                        <p class="card-text">Это вашь тест</p>
+                        <p class="card-text">Это ваш тест</p>
                         {% else %}
                         <a href="{{ url }}{{ all }}" class="btn btn-primary">Подробнее</a>
                         {% endif %}

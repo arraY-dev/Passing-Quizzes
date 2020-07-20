@@ -12,41 +12,42 @@
             {{ form.as_p }}
             {{ formset.as_p }}
             <button type="submit" class="btn btn-success">Создать</button>
-            <a href="#" onclick="window.history.back(); return false;" title="Cancel"><i>Отмена</i></a>
+            <a href="#" onclick="window.history.back(); return false;" title="Cancel"
+               class="btn btn-primary btn-cancel"><i>Отмена</i></a>
         </form>
     </div>
 </div>
 <script>
-    (function() {
-    const form = document.querySelector('#sectionForm');
-    const checkboxes = form.querySelectorAll('input[type=checkbox]');
-    const checkboxLength = checkboxes.length;
-    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+    (function () {
+        const form = document.querySelector('#sectionForm');
+        const checkboxes = form.querySelectorAll('input[type=checkbox]');
+        const checkboxLength = checkboxes.length;
+        const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
 
-    function init() {
-        if (firstCheckbox) {
+        function init() {
+            if (firstCheckbox) {
+                for (let i = 0; i < checkboxLength; i++) {
+                    checkboxes[i].addEventListener('change', checkValidity);
+                }
+
+                checkValidity();
+            }
+        }
+
+        function isChecked() {
             for (let i = 0; i < checkboxLength; i++) {
-                checkboxes[i].addEventListener('change', checkValidity);
+                if (checkboxes[i].checked) return true;
             }
 
-            checkValidity();
-        }
-    }
-
-    function isChecked() {
-        for (let i = 0; i < checkboxLength; i++) {
-            if (checkboxes[i].checked) return true;
+            return false;
         }
 
-        return false;
-    }
+        function checkValidity() {
+            const errorMessage = !isChecked() ? 'Вопрос должен содержать минимум один ответ.' : '';
+            firstCheckbox.setCustomValidity(errorMessage);
+        }
 
-    function checkValidity() {
-        const errorMessage = !isChecked() ? 'Вопрос должен содержать минимум один ответ.' : '';
-        firstCheckbox.setCustomValidity(errorMessage);
-    }
-
-    init();
-})();
+        init();
+    })();
 </script>
 {% endblock %}
