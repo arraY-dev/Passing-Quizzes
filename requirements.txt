@@ -17,7 +17,7 @@ oauthlib==3.1.0
 path==13.1.0
 path.py==12.4.0
 pilkit==2.0
-Pillow==7.2.0
+Pillow==9.3.0
 pycparser==2.20
 PyJWT==1.7.1
 python3-openid==3.2.0
